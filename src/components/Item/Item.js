@@ -2,8 +2,12 @@ import './Item.css'
 import {Link} from 'react-router-dom'
 
 const Item = ({id, name, price,img,stock,description}) => {
+    const handleClick = (e) => {
+        e.stopPropagation()
+        console.log('hice click en item')
+    }
     return (
-        <article className="CardItem">
+        <article className="CardItem" onClick={handleClick}>
         <header className="Header">
             <h2 className="ItemHeader">
                 {name}
@@ -14,7 +18,10 @@ const Item = ({id, name, price,img,stock,description}) => {
         </picture>
         <section>
             <p className="Info">
-                Precio: ${price}
+                Precio: ${price}                
+            </p>
+            <p className="Info">
+               Stock disponible: ${stock}
             </p>
         </section>           
         <footer className='ItemFooter'>

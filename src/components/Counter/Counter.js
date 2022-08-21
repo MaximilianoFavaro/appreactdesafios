@@ -1,11 +1,16 @@
 import './Counter.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const Counter = ({stock = 0, initial = 1, onAdd})=> {
    const [quantity, setQuantity] = useState(initial)
 
+   useEffect(() => {
+    setQuantity(initial)
+    }, [initial])
+
    const increment = () => {
        if(quantity < stock) {
+           console.log(quantity)
            setQuantity(quantity+1)
        }
    }
