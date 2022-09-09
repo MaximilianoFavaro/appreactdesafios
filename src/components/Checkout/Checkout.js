@@ -4,26 +4,43 @@ import CartContext from "../../context/CartContext"
 import { db } from "../../services/firebase"
 import { addDoc, collection, updateDoc, doc, getDocs, query, where, documentId, writeBatch } from "firebase/firestore"
 import { useNavigate } from 'react-router-dom'
+import './Checkout.css'
+import NotificationContext from '../../notification/Notification'
 
 const Checkout = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [orderCreated, setOrderCreated] = useState(false)
     const { cart, getQuantity, getTotal, clearCart } = useContext(CartContext) 
+    const {setNotification} = useContext(NotificationContext)
 
-    const navigate = useNavigate()
+    const navigate = useNavigate()    
 
     const totalQuantity = getQuantity()
     const total = getTotal()
+
+    const [orderDetail,setorderDetail]=useState({
+        nombre:'',
+        apellido:'',
+        telefono:'',
+        direccion:''
+       })
+    const handleOnChange=e=>{
+        const {name, value}=e.target; 
+        setorderDetail({
+          ...orderDetail,
+          [name]: value
+        });      
+       }
 
     const createOrder = async () => {
         setIsLoading(true)
         try {
             const objOrder = {
                 buyer: {
-                    firstName: 'Fulano',
-                    lastName: 'Mengano',
-                    phone: '123456789',
-                    address: 'direccion 123'
+                    firstName: orderDetail.nombre,
+                    lastName: orderDetail.apellido,
+                    phone: orderDetail.telefono,
+                    address: orderDetail.direccion
                 },
                 items: cart,
                 totalQuantity,
@@ -61,8 +78,9 @@ const Checkout = () => {
                 await batch.commit()
     
                 const orderRef = collection(db, 'orders')
-                const orderAdded = await addDoc(orderRef, objOrder)
-    
+                const orderAdded = await addDoc(orderRef, objOrder)                
+                setNotification('success',`El id de su orden es: ${orderAdded.id}`)
+                
                 console.log(`El id de su orden es: ${orderAdded.id}`)
                 clearCart()
                 setOrderCreated(true)
@@ -79,11 +97,11 @@ const Checkout = () => {
         }
     }
 
-    if(isLoading) {
-        return <h1>Se esta generando tu orden...</h1>
+    if(isLoading) {        
+        return <h1>Se esta generando tu orden..</h1>
     }
 
-    if(orderCreated) {
+    if(orderCreated) {        
         return <h1>La orden fue creada correctamente, sera redirigido al listado de productos en 3 segundos</h1>
     }
 
@@ -91,7 +109,31 @@ const Checkout = () => {
         <>
             <h1>Checkout</h1>
             <h2>Formulario</h2>
-            <button className="Option" onClick={createOrder}>Generar Orden</button>
+            <div className="formContent">
+                
+                <div className="inputDiv">
+                    <label className="labelsForm">Nombre</label>
+                    <input className="inputsForm" type="text" name="nombre" onChange={handleOnChange}/>
+
+                </div>
+                <div className="inputDiv">
+                    <label className="labelsForm">Apellido</label>
+                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+
+                </div>
+                <div className="inputDiv">
+                    <label className="labelsForm">Telefono</label>
+                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+                </div>
+                <div className="inputDiv">
+                    <label className="labelsForm">Direccion</label>
+                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+                </div>
+                <button className="Option" onClick={createOrder}>Generar Orden</button>
+
+            </div>
+            
+            
         </>
     )
 }
