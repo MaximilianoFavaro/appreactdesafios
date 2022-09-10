@@ -2,7 +2,7 @@ import { useState, useContext } from "react"
 import CartContext from "../../context/CartContext"
 
 import { db } from "../../services/firebase"
-import { addDoc, collection, updateDoc, doc, getDocs, query, where, documentId, writeBatch } from "firebase/firestore"
+import { addDoc, collection,  getDocs, query, where, documentId, writeBatch } from "firebase/firestore"
 import { useNavigate } from 'react-router-dom'
 import './Checkout.css'
 import NotificationContext from '../../notification/Notification'
@@ -118,16 +118,16 @@ const Checkout = () => {
                 </div>
                 <div className="inputDiv">
                     <label className="labelsForm">Apellido</label>
-                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+                    <input className="inputsForm"  type="text" name="apellido" onChange={handleOnChange}/>
 
                 </div>
                 <div className="inputDiv">
                     <label className="labelsForm">Telefono</label>
-                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+                    <input className="inputsForm"  type="text" name="telefono" onChange={handleOnChange}/>
                 </div>
                 <div className="inputDiv">
                     <label className="labelsForm">Direccion</label>
-                    <input className="inputsForm"  type="text" name="nombre" onChange={handleOnChange}/>
+                    <input className="inputsForm"  type="text" name="direccion" onChange={handleOnChange}/>
                 </div>
                 <button className="Option" onClick={createOrder}>Generar Orden</button>
 
